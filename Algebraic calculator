@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algebraic Calculator Using Java Script</title>
+    <script>
+        alert('Welcome to Algebraic Calculator');
+    </script>
+    
+    <style>
+      /* Resetting margins and paddings to ensure consistent styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Body styling with a smooth background gradient */
+body {
+    background: linear-gradient(135deg, #6e7c7c, #e3e7e7);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    font-size: 16px;
+}
+
+/* Centered container with max-width and box-shadow */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Header section styling */
+header {
+    background-color: #3b8d99;
+    color: #fff;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+header h2 {
+    font-size: 1.2rem;
+    font-weight: lighter;
+    margin-top: 5px;
+}
+
+header h4 {
+    color: #b0c7c7;
+    font-size: 1rem;
+}
+
+/* Content area using flexbox for alignment */
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 30px;
+    gap: 30px;
+}
+
+/* Styling for the left menu */
+.menu {
+    background-color: #2d3a3a;
+    color: #fff;
+    padding: 20px;
+    width: 280px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.menu-item {
+    display: block;
+    padding: 15px;
+    background: #2d3a3a;
+    color: white;
+    text-align: left;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background-color: #57b39e;
+    transform: scale(1.05);
+}
+
+.menu-item:focus {
+    outline: none;
+}
+
+/* Main content calculator area */
+.calculator {
+    flex: 1;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.calculator-content {
+    display: none;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.calculator-content.active {
+    display: block;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 1rem;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus,
+select:focus {
+    border: 1px solid #57b39e;
+    box-shadow: 0 0 10px rgba(87, 179, 158, 0.5);
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #57b39e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #2d3a3a;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #1e2c2c;
+}
+
+.result {
+    padding: 20px;
+    background-color: #dcdcdc;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: #333;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.basic-calculator {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 350px;
+    margin-top: 20px;
+}
+
+.basic-calculator input {
+    grid-column: span 4;
+    font-size: 2rem;
+    text-align: right;
+    height: 60px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.basic-calculator button {
+    font-size: 1.5rem;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.basic-calculator .equals {
+    grid-column: span 2;
+    background-color: #FF5722;
+    color: white;
+}
+
+.basic-calculator .equals:hover {
+    background-color: #e64a19;
+}
+
+h2 {
+    color: #3b8d99;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.error {
+    color: red;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.calculator-content p {
+    font-size: 1.2rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* Responsive Layout for Smaller Screens */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+    }
+
+    .menu {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .calculator {
+        padding: 20px;
+    }
+
+    .basic-calculator {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .menu-item {
+        font-size: 1rem;
+    }
+
+    button {
+        font-size: 1rem;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        
+        <header>
+            <h1><marquee>Algebraic Calculator Using Java Script</marquee></h1>
+            
+            <h3>Group Members</h3>          
+            <h4>Johann Riomel Botor</h4>
+<h4>Wendy Mae Corpuz</h4>
+<h4>Haidie Barredo</h4>
+<h4>Jonalyn Asiado</h4> 
+<h4>Henna Andaya</h4>
+<h4>Sandy Soriano</h4>
+<h4>Lorence David Canales</h4>
+<h4>Joshua Geslani</h4>
+<h4>Glen Andemar </h4>
+              
+        </header>
+        <div class="content">
+            <div class="menu">                
+   <head><h2><marquee>Calculator List</marquee>  
+   <div class="menu-item  
+                   
+<div class="menu-item" data-calc="basic">•Basic Calculator</div>
+<div class="menu-item" 
+<div class="menu-item" data-calc="exponent-laws">•Exponent Laws</div>
+<div class="menu-item" data-calc="coordinate-geometry">•Coordinate Geometry</div>
+<div class="menu-item" data-calc="quadratic">•Quadratic Equation</div>
+<div class="menu-item" data-calc="higher-degree-polynomials">•Higher-Degree Polynomials</div>
+<div class="menu-item" data-calc="complex-numbers">•Complex Numbers</div>
+<div class="menu-item" data-calc="conic-sections">•Conic Sections</div>
+<div class="menu-item" data-calc="arithmetic-sequence">•Arithmetic Sequence</div>
+<div class="menu-item" data-calc="absolute-value">•Absolute Value Equations</div>
+<div class="menu-item" data-calc="exponential-growth-decay">•Exponential Growth and Decay</div>
+<div class="menu-item" data-calc="factor-remainder">•Factor Theorem and Remainder Theorem</div>
+<div class="menu-item" data-calc="cauchy-schwarz">•Cauchy-Schwarz Inequality</div>
+<div class="menu-item" data-calc="homogeneous-equations">•Homogeneous Equations</div>
+<div class="menu-item" data-calc="inequalities">•Inequalities</div>
+<div class="menu-item" data-calc="inverse-functions">•Inverse Function Solver</div>
+<div class="menu-item" data-calc="inverse-trig">•Inverse Trigonometric Functions</div>
+<div class="menu-item" data-calc="linear">•Linear Equation</div>
+<div class="menu-item" data-calc="mathematical-induction">•Mathematical Induction</div>
+<div class="menu-item" data-calc="nonlinear-systems">•Systems of Nonlinear Equations</div>
+<div class="menu-item" data-calc="parametric-equations">•Parametric Equations</div>
+<div class="menu-item" data-calc="partial-fractions">•Partial Fractions</div>
+<div class="menu-item" data-calc="partial-fractions-decomposition">•Partial Fractions Decomposition</div>
+<div class="menu-item" data-calc="polynomial-division">•Polynomial Division (Long & Synthetic Division)</div>
+<div class="menu-item" data-calc="binomial-theorem">•Binomial Theorem</div>
+<div class="menu-item" data-calc="radical-equations">•Radical Equations</div>
+<div class="menu-item" data-calc="roots-of-unity">•Roots of Unity</div>
+<div class="menu-item" data-calc="roots-radicals">•Roots and Radicals</div>
+<div class="menu-item" data-calc="sequence-series">•Sequence and Series</div>
+<div class="menu-item" data-calc="radical-equations">•Radical Equations</div>
+<div class="menu-item" data-calc="sum-of-powers">•Sum of Powers of Roots</div>
+<div class="menu-item" data-calc="sum-product-roots">•Sum and Product of Roots</div>
+<div class="menu-item" data-calc="vieta-formulas">•Vieta’s Formulas</div>
+<div class="menu-item" data-calc="newtons-sums">•Newton’s Sums</div>
+
+<!-- New Topics -->
+<div class="menu-item" data-calc="higher-degree-polynomials">•Higher-Degree Polynomials</div>
+<div class="menu-item" data-calc="partial-fractions">•Partial Fractions Decomposition</div>
+<div class="menu-item" data-calc="homogeneous-equations">•Homogeneous Equations</div>
+<div class="menu-item" data-calc="exponential-growth-decay">•Exponential Growth and Decay</div>
+<div class="menu-item" data-calc="inverse-trig">•Inverse Trigonometric Functions</div>
+<div class="menu-item" data-calc="nonlinear-systems">•Systems of Nonlinear Equations</div>
+<div class="menu-item" data-calc="mathematical-induction">•Mathematical Induction</div>
+<div class="menu-item" data-calc="polynomial-division">•Polynomial Division (Long & Synthetic Division)</div>
+<div class="menu-item" data-calc="cauchy-schwarz">•Cauchy-Schwarz Inequality</div>
+<div class="menu-item" data-calc="factor-remainder">•Factor Theorem and Remainder Theorem</div>
+<div class="menu-item" data-calc="roots-of-unity">•Roots of Unity</div>
+<div class="menu-item" data-calc="vieta-formulas">•Vieta’s Formulas</div>
+<div class="menu-item" data-calc="newtons-sums">•Newton’s Sums</div>
+<div class="menu-item" data-calc="sum-of-powers">•Sum of Powers of Roots</div>
+
+               
+            </div>                             
+            <div class="calculator">
+                <!-- Basic Calculator -->
+                <div class="calculator-content active" id="basic">
+                    <h2>Basic Calculator</h2>
+                    <div class="basic-calculator">
+                        <input type="text" id="basic-display" readonly>
+                        <button onclick="clearDisplay()">C</button>
+                        <button onclick="backspace()">&larr;</button>
+                        <button onclick="appendOp('%')">%</button>
+                        <button onclick="appendOp('/')">/</button>
+                        <button onclick="appendNum('7')">7</button>
+                        <button onclick="appendNum('8')">8</button>
+                        <button onclick="appendNum('9')">9</button>
+                        <button onclick="appendOp('*')">*</button>
+                        <button onclick="appendNum('4')">4</button>
+                        <button onclick="appendNum('5')">5</button>
+                        <button onclick="appendNum('6')">6</button>
+                        <button onclick="appendOp('-')">-</button>
+                        <button onclick="appendNum('1')">1</button>
+                        <button onclick="appendNum('2')">2</button>
+                        <button onclick="appendNum('3')">3</button>
+                        <button onclick="appendOp('+')">+</button>
+                        <button onclick="appendNum('0')">0</button>
+                        <button onclick="appendNum('.')">.</button>
+                        <button onclick="calculate()" class="equals">=</button>
+                    </div>
+                </div>
+
+
+                <!-- Quadratic Equation -->
+<div class="calculator-content" id="quadratic">
+    <h2>Quadratic Equation Solver</h2>
+    <p>ax² + bx + c = 0</p>
+    <input type="number" id="quad-a" placeholder="Enter coefficient a">
+    <input type="number" id="quad-b" placeholder="Enter coefficient b">
+    <input type="number" id="quad-c" placeholder="Enter coefficient c">
+    <button onclick="solveQuadratic()">Solve</button>
+    <div class="result" id="quadratic-result"></div>
+</div>
+
+<script>
+// Function to solve the quadratic equation
+function solveQuadratic() {
+    // Get input values for a, b, and c
+    const a = parseFloat(document.getElementById('quad-a').value);
+    const b = parseFloat(document.getElementById('quad-b').value);
+    const c = parseFloat(document.getElementById('quad-c').value);
+
+    // Check if the input values are valid
+    if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        document.getElementById('quadratic-result').innerText = "Please enter valid numbers for a, b, and c.";
+        return;
+    }
+
+    // Calculate the discriminant (b² - 4ac)
+    const discriminant = b * b - 4 * a * c;
+
+    // Calculate the solutions based on the discriminant
+    if (discriminant > 0) {
+        // Two real and distinct roots
+        const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+        const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+        document.getElementById('quadratic-result').innerText = `The solutions are x = ${root1} and x = ${root2}`;
+    } else if (discriminant === 0) {
+        // One real root (repeated)
+        const root = -b / (2 * a);
+        document.getElementById('quadratic-result').innerText = `The solution is x = ${root}`;
+    } else {
+        // No real solutions (complex roots)
+        const realPart = -b / (2 * a);
+        const imaginaryPart = Math.sqrt(-discriminant) / (2 * a);
+        document.getElementById('quadratic-result').innerText = `The solutions are complex: x = ${realPart} ± ${imaginaryPart}i`;
+    }
+}
+</script>
+
+
+                <!-- Linear Equation -->
+<div class="calculator-content" id="linear">
+    <h2>Linear Equation Solver</h2>
+    <p>ax + b = 0</p>
+    <input type="number" id="linear-a" placeholder="Enter coefficient a">
+    <input type="number" id="linear-b" placeholder="Enter coefficient b">
+    <button onclick="solveLinear()">Solve</button>
+    <div class="result" id="linear-result"></div>
+</div>
+
+<script>
+function solveLinear() {
+    // Get the values of a and b from the input fields
+    const a = parseFloat(document.getElementById('linear-a').value);
+    const b = parseFloat(document.getElementById('linear-b').value);
+    
+    // Ensure both a and b are numbers
+    if (isNaN(a) || isNaN(b)) {
+        document.getElementById('linear-result').innerText = 'Please enter valid numbers for a and b.';
+        return;
+    }
+
+    // Solve for x in ax + b = 0
+    if (a === 0) {
+        if (b === 0) {
+            document.getElementById('linear-result').innerText = 'Infinite solutions (any x is a solution).';
+        } else {
+            document.getElementById('linear-result').innerText = 'No solution (a = 0 and b ≠ 0).';
+        }
+    } else {
+        const x = -b / a;
+        document.getElementById('linear-result').innerText = `The solution is x = ${x}`;
+    }
+}
+</script>
+
+
+                <!-- Roots and Radicals -->
+<div class="calculator-content" id="roots-radicals">
+    <h2>Roots and Radicals Solver</h2>
+    <p>√(ax + b) = c</p>
+    <input type="number" id="rad-a" placeholder="Enter coefficient a">
+    <input type="number" id="rad-b" placeholder="Enter coefficient b">
+    <input type="number" id="rad-c" placeholder="Enter value of c">
+    <button onclick="solveRoots()">Solve</button>
+    <div class="result" id="roots-result"></div>
+</div>
+
+<script>
+  // Wait until the DOM is loaded
+  document.addEventListener("DOMContentLoaded", function() {
+    function solveRoots() {
+      // Get values from the input fields
+      const a = parseFloat(document.getElementById("rad-a").value);
+      const b = parseFloat(document.getElementById("rad-b").value);
+      const c = parseFloat(document.getElementById("rad-c").value);
+
+      // Ensure all values are provided
+      if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        document.getElementById("roots-result").textContent = "Please enter valid numbers.";
+        return;
+      }
+
+      // Calculate the value inside the square root
+      const discriminant = c * c - b;
+      
+      // Ensure the value inside the root is not negative (real solutions only)
+      if (discriminant < 0) {
+        document.getElementById("roots-result").textContent = "No real solutions.";
+        return;
+      }
+
+      // Calculate the roots of the equation
+      const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+      const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+
+      // Display the result
+      document.getElementById("roots-result").textContent = `The roots are: x1 = ${x1}, x2 = ${x2}`;
+    }
+  });
+</script>
+
+
+                <!-- Inequalities -->
+<div class="calculator-content" id="inequalities">
+    <h2>Inequality Solver</h2>
+    <p>ax + b < c</p>
+    <input type="number" id="ineq-a" placeholder="Enter coefficient a">
+    <input type="number" id="ineq-b" placeholder="Enter coefficient b">
+    <input type="number" id="ineq-c" placeholder="Enter value of c">
+    <button onclick="solveInequality()">Solve</button>
+    <div class="result" id="inequality-result"></div>
+</div>
+
+<script>
+    function solveInequality() {
+        // Get the values of a, b, and c from the input fields
+        let a = parseFloat(document.getElementById("ineq-a").value);
+        let b = parseFloat(document.getElementById("ineq-b").value);
+        let c = parseFloat(document.getElementById("ineq-c").value);
+
+        // Check if the inputs are valid numbers
+        if (isNaN(a) || isNaN(b) || isNaN(c)) {
+            document.getElementById("inequality-result").innerHTML = "Please enter valid numbers for all coefficients.";
+            return;
+        }
+
+        // Check if a is zero, as division by zero is not allowed
+        if (a === 0) {
+            document.getElementById("inequality-result").innerHTML = "Coefficient 'a' cannot be zero.";
+            return;
+        }
+
+        // Solve the inequality ax + b < c for x
+        let result = (c - b) / a;
+
+        // Display the result
+        document.getElementById("inequality-result").innerHTML = `The solution is: x < ${result}`;
+    }
+</script>
+
+
+                <!-- Absolute Value Equations -->
+<div class="calculator-content" id="absolute-value">
+    <h2>Absolute Value Equation Solver</h2>
+    <p>|ax + b| = c</p>
+    <input type="number" id="abs-a" placeholder="Enter coefficient a">
+    <input type="number" id="abs-b" placeholder="Enter coefficient b">
+    <input type="number" id="abs-c" placeholder="Enter constant c">
+    <button onclick="solveAbsoluteValue()">Solve</button>
+    <div class="result" id="absolute-value-result"></div>
+</div>
+
+<script>
+    function solveAbsoluteValue() {
+        // Get input values
+        var a = parseFloat(document.getElementById("abs-a").value);
+        var b = parseFloat(document.getElementById("abs-b").value);
+        var c = parseFloat(document.getElementById("abs-c").value);
+
+        // Check if the input values are valid
+        if (isNaN(a) || isNaN(b) || isNaN(c)) {
+            document.getElementById("absolute-value-result").innerHTML = "Please enter valid numbers.";
+            return;
+        }
+
+        // Handle the equation |ax + b| = c
+        if (c < 0) {
+            document.getElementById("absolute-value-result").innerHTML = "No solution, as absolute value cannot be negative.";
+            return;
+        }
+
+        // Solve for x
+        var x1 = (c - b) / a; // First solution
+        var x2 = (-c - b) / a; // Second solution
+
+        // Display the results
+        document.getElementById("absolute-value-result").innerHTML = `The solutions are: <br> x = ${x1} or x = ${x2}`;
+    }
+</script>
+               
+                <!-- Roots and Radicals -->
+<div class="calculator-content" id="roots-radicals">
+    <h2>Roots and Radicals Solver</h2>
+    <p>√(ax + b) = c</p>
+    <input type="number" id="rad-a" placeholder="Enter coefficient a">
+    <input type="number" id="rad-b" placeholder="Enter coefficient b">
+    <input type="number" id="rad-c" placeholder="Enter value of c">
+    <button onclick="solveRoots()">Solve</button>
+    <div class="result" id="roots-result"></div>
+</div>
+
+<script>
+// JavaScript function to solve the equation √(ax + b) = c
+function solveRoots() {
+    // Get input values for a, b, and c
+    const a = parseFloat(document.getElementById('rad-a').value);
+    const b = parseFloat(document.getElementById('rad-b').value);
+    const c = parseFloat(document.getElementById('rad-c').value);
+
+    //
